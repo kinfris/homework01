@@ -1,11 +1,11 @@
+import express from 'express';
+import {videosRouter} from "./lesson01/routes/videos-router"
 
-import express, {Request, Response} from "express"
-const app = express()
-const port = 5000
+const app = express();
+const port = process.env.PORT || 5001;
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World!')
-})
+app.use(express.json())
+app.use("/lesson_01/api/videos", videosRouter)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
