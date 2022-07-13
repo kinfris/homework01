@@ -5,8 +5,10 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            message: errors.array()[0].msg,
-            field: errors.array()[0].param
+            errorsMessages: [{
+                message: errors.array()[0].msg,
+                field: errors.array()[0].param
+            }]
         })
     } else {
         next()
