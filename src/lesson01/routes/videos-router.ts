@@ -17,7 +17,11 @@ videosRouter.get("/", (req: Request, res: Response) => {
 
 videosRouter.post("/", titleValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const newVideo = videosRepositories.createVideo(req.body.title, req.body.author)
-    res.status(201).send(newVideo)
+
+    res.status(201).send({
+        id: newVideo.id,
+        title: newVideo.title
+    })
 });
 
 videosRouter.get("/:id", (req: Request, res: Response) => {
