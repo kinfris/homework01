@@ -32,7 +32,7 @@ videosRouter.get("/:id", (req: Request, res: Response) => {
 videosRouter.put("/:id", titleValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const video = videosRepositories.updateVideoTitle(req.params.id, req.body.title);
     if (video) {
-        res.status(201).send(video);
+        res.status(204).send(video);
     } else {
         res.send(404)
     }

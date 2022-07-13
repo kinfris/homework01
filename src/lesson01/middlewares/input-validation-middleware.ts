@@ -8,8 +8,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
             errorsMessages: [...errors.array().map(err => ({
                 message: err.msg,
                 field: err.param
-            }))],
-            resultCode: 1
+            }))]
         })
     } else {
         next()
