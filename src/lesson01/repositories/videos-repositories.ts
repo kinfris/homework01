@@ -1,19 +1,17 @@
-import {v4} from "uuid"
-
 type videoType = {
-    id: string
+    id: number
     title: string
     author: string
 }
 
 const videos: videoType[] = [
     {
-        id: v4(),
+        id: +(new Date()),
         title: "first item",
         author: "Yura"
     },
     {
-        id: v4(),
+        id: +(new Date()),
         title: "second item",
         author: "Andrew"
     }
@@ -25,12 +23,12 @@ export const videosRepositories = {
     },
 
     getVideoById(id: string) {
-        return videos.find(v => v.id === id);
+        return videos.find(v => v.id === +id);
     },
 
     createVideo(title: string, author: string) {
         const video = {
-            id: v4(),
+            id: +(new Date()),
             title: title,
             author: author
         }
@@ -39,7 +37,7 @@ export const videosRepositories = {
     },
 
     updateVideoTitle(id: string, title: string) {
-        let video = videos.find(v => v.id === id)
+        let video = videos.find(v => v.id === +id)
         if (video) {
             video.title = title;
             return video
@@ -47,7 +45,7 @@ export const videosRepositories = {
     },
     deleteVideo(id: string) {
         for (let i = 0; i < videos.length; i++) {
-            if(videos[i].id === id){
+            if(videos[i].id === +id){
                 videos.splice(i, 1);
                 return true;
             }
