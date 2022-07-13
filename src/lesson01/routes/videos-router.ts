@@ -11,7 +11,8 @@ const titleValidation = body("title").trim().isLength({
 }).withMessage("title length must be from 3 to 40 symbols");
 
 videosRouter.get("/", (req: Request, res: Response) => {
-    res.send(videosRepositories.getAllVideos())
+    const videosDtos = videosRepositories.getAllVideos().map(v => ({ id: v.id, title: v.title }))
+    res.send(videosDtos)
 });
 
 videosRouter.post("/", titleValidation, inputValidationMiddleware, (req: Request, res: Response) => {
