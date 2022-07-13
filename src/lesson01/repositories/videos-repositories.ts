@@ -4,18 +4,7 @@ type videoType = {
     author: string
 }
 
-const videos: videoType[] = [
-    {
-        id: +(new Date()),
-        title: "first item",
-        author: "Yura"
-    },
-    {
-        id: +(new Date()),
-        title: "second item",
-        author: "Andrew"
-    }
-]
+const videos: videoType[] = []
 
 export const videosRepositories = {
     getAllVideos() {
