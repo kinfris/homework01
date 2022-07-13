@@ -10,11 +10,16 @@ const titleValidation = body("title").trim().isLength({
     max: 40
 }).withMessage("title length must be from 3 to 40 symbols");
 
+const authorValidation = body("author").trim().isLength({
+    min: 3,
+    max: 40
+}).withMessage("author length must be from 3 to 40 symbols");
+
 videosRouter.get("/", (req: Request, res: Response) => {
     res.send(videosRepositories.getAllVideos())
 });
 
-videosRouter.post("/", titleValidation, inputValidationMiddleware, (req: Request, res: Response) => {
+videosRouter.post("/", titleValidation, authorValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const newVideo = videosRepositories.createVideo(req.body.title, req.body.author)
     res.status(201).send(newVideo)
 });
