@@ -2,7 +2,6 @@ import {Router, Request, Response} from "express";
 import {body} from "express-validator";
 import {postsRepositories} from "../repositories/posts-repository";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
-import {bloggers} from "../repositories/bloggers-repository";
 
 export const postsRouter = Router();
 
@@ -25,14 +24,14 @@ const bloggerIdValidation = body("bloggerId").trim().isLength({
     min: 3
 }).withMessage("bloggerId is required");
 
-const isBloggerExist = body("bloggerId").custom(value  => {
-    const blogger = bloggers.find(b => b.id === +value);
-    if (!blogger) {
-        throw new Error("blogger with this id doesn`t exist")
-    }else {
-        return true
-    }
-})
+const bloggerIdErrorMsg = {
+    errorsMessages: [
+        {
+            message: "blogger with this id doesn`t exist",
+            field: "bloggerId"
+        }
+    ]
+}
 
 
 postsRouter.get("/", (req: Request, res: Response) => {
@@ -50,13 +49,13 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 postsRouter.post("/", titleValidation, shortDescriptionValidation, contentValidation,
-    bloggerIdValidation, isBloggerExist, inputValidationMiddleware, (req: Request, res: Response) => {
+    bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
         const post = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
         if (post) {
-        res.status(201).send(post)
-         } else {
-             res.send(404)
-         }
+            res.status(201).send(post)
+        } else {
+            res.status(400).json(bloggerIdErrorMsg)
+        }
     });
 
 postsRouter.put("/:id", titleValidation, shortDescriptionValidation, contentValidation, bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
