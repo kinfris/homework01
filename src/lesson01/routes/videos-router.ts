@@ -44,7 +44,7 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
     if (isDeleted) {
         res.send(204);
     } else {
-        res.send(404)
+        res.send(404);
     }
 })
 
