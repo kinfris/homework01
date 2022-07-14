@@ -15,11 +15,11 @@ export const videosRepositories = {
         return videos.find(v => v.id === +id);
     },
 
-    createVideo(title: string, author: string) {
+    createVideo(title: string) {
         const video = {
             id: +(new Date()),
             title: title,
-            author: author
+            author: "any author"
         }
         videos.push(video);
         return video;

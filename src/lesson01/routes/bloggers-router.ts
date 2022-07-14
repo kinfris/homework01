@@ -13,7 +13,7 @@ const nameValidation = body("name").trim().isLength({
 const urlValidation = body("youtubeUrl").trim().isLength({
     min: 3,
     max: 100
-}).withMessage("youtubeUrl length must be from 3 to 100 symbols");
+}).isURL().withMessage("youtubeUrl length must be from 3 to 100 symbols");
 
 bloggersRouter.get("/", (req: Request, res: Response) => {
     const bloggers = bloggersRepositories.getAllBloggers()
