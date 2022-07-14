@@ -22,7 +22,11 @@ bloggersRouter.get("/", (req: Request, res: Response) => {
 
 bloggersRouter.get("/:id", (req: Request, res: Response) => {
     const blogger = bloggersRepositories.getBloggerById(req.params.id)
-    res.send(blogger)
+    if (blogger) {
+        res.send(blogger)
+    } else {
+        res.send(404)
+    }
 });
 
 bloggersRouter.post("/", nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {

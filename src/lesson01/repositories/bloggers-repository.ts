@@ -35,12 +35,11 @@ export const bloggersRepositories = {
     },
 
     deleteBlogger(id: string){
-        for (let i = 0; i < bloggers.length; i++) {
-            if(bloggers[i].id === +id){
-                bloggers.splice(i, 1);
-                return true;
-            }
+        const bloggerId = bloggers.findIndex(p => p.id === +id);
+        if(bloggerId >= 0){
+            bloggers.splice(bloggerId, 1);
+            return true
         }
-        return false;
+        return false
     }
 }
