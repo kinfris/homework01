@@ -24,7 +24,7 @@ export const postsRepositories = {
     },
 
     createPost(title: string, shortDescription: string, content: string, bloggerId: string) {
-        let blogger = bloggersRepositories.getBloggerById(bloggerId);
+        const blogger = bloggersRepositories.getBloggerById(bloggerId);
 
         if (blogger) {
             const newPost = {
@@ -43,7 +43,9 @@ export const postsRepositories = {
 
     updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string){
         const post = posts.find(p => p.id === +id);
-        if(post){
+        const blogger = bloggersRepositories.getBloggerById(bloggerId);
+
+        if(post && blogger){
             post.title = title;
             post.shortDescription = shortDescription;
             post.content = content;
