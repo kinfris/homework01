@@ -59,9 +59,14 @@ postsRouter.post("/", titleValidation, shortDescriptionValidation, contentValida
     });
 
 postsRouter.put("/:id", titleValidation, shortDescriptionValidation, contentValidation, bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-    const post = postsRepositories.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
+    const updatedPost = postsRepositories.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
+    const post = postsRepositories.getPostById(req.params.id);
     if (post) {
-        res.send(204)
+        if (updatedPost) {
+            res.send(204)
+        } else {
+            res.status(400).json(bloggerIdErrorMsg)
+        }
     } else {
         res.send(404)
     }
