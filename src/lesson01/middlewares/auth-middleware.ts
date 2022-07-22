@@ -3,11 +3,7 @@ import {Request, Response, NextFunction} from "express";
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authInfo = req.headers.authorization
 
-    if (!req.headers.authorization) {
-        res.sendStatus(401)
-    }
-
-    if (!req.headers) {
+    if (!req.headers.authorization || !req.headers) {
         res.sendStatus(401)
     }
 
