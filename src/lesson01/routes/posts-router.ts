@@ -49,7 +49,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-postsRouter.post("/", authMiddleware, titleValidation, shortDescriptionValidation, contentValidation,
+postsRouter.post("/",  titleValidation, shortDescriptionValidation, contentValidation,
     bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
         const post = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
         if (post) {
@@ -59,7 +59,7 @@ postsRouter.post("/", authMiddleware, titleValidation, shortDescriptionValidatio
         }
     });
 
-postsRouter.put("/:id", authMiddleware, titleValidation,
+postsRouter.put("/:id",  titleValidation,
     shortDescriptionValidation, contentValidation,
     bloggerIdValidation, inputValidationMiddleware,
     (req: Request, res: Response) => {
@@ -76,7 +76,7 @@ postsRouter.put("/:id", authMiddleware, titleValidation,
         }
     });
 
-postsRouter.delete("/:id", authMiddleware, inputValidationMiddleware, (req: Request, res: Response) => {
+postsRouter.delete("/:id",   (req: Request, res: Response) => {
     const post = postsRepositories.deletePost(req.params.id);
     if (post) {
         res.send(204)

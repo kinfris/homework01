@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-   /* const authInfo = req.headers.authorization
+    const authInfo = req.headers.authorization
 
     if (authInfo) {
         let loginPasswordBase64 = authInfo.split(" ")[1];
@@ -17,6 +17,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     res.status(401).json({
         message: "You are not authorized",
         field: "login&password"
-    });*/
+    });
     return
 }
