@@ -11,10 +11,14 @@ const nameValidation = body("name").trim().isLength({
     max: 15
 }).withMessage("name length must be from 3 to 15 symbols");
 
-const urlValidation = body("youtubeUrl").trim().isLength({
-    min: 3,
-    max: 100
-}).isURL().withMessage("youtubeUrl length must be from 3 to 100 symbols");
+const urlValidation = body("youtubeUrl").trim()
+    .isURL()
+    .withMessage("incorrect format of url")
+    .isLength({
+        min: 3
+    })
+    .withMessage("youtubeUrl length must be from 3 to 100 symbols");
+
 
 bloggersRouter.get("/", (req: Request, res: Response) => {
     const bloggers = bloggersRepositories.getAllBloggers()
@@ -30,7 +34,7 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-bloggersRouter.post("/", authMiddleware, nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
+bloggersRouter.post("/", nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const blogger = bloggersRepositories.createBlogger(req.body.name, req.body.youtubeUrl)
     res.status(201).send(blogger)
 });

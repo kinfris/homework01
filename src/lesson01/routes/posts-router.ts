@@ -49,7 +49,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-postsRouter.post("/", authMiddleware, titleValidation, shortDescriptionValidation, contentValidation,
+postsRouter.post("/",  titleValidation, shortDescriptionValidation, contentValidation,
     bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
         const post = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
         if (post) {
