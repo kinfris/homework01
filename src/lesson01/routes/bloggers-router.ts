@@ -34,7 +34,7 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-bloggersRouter.post("/", nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
+bloggersRouter.post("/", authMiddleware, nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const blogger = bloggersRepositories.createBlogger(req.body.name, req.body.youtubeUrl)
     res.status(201).send(blogger)
 });

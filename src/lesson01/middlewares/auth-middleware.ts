@@ -3,6 +3,7 @@ import {Request, Response, NextFunction} from "express";
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authInfo = req.headers.authorization
 
+    console.log(authInfo)
     if (authInfo) {
         let loginPasswordBase64 = authInfo.split(" ")[1];
 
