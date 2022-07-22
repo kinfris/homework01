@@ -15,7 +15,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
             next()
         }
     } else {
-        res.status(401).json({
+        res.status(401).send({
             message: "You are not authorized",
             field: "login&password"
         });
