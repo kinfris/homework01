@@ -10,13 +10,19 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
         const str = buff.toString('utf-8');
 
-        req.params.authInfo = str;
-        next()
+        let loginPassword = str.split(":")
+        if (loginPassword[0] === "admin" && loginPassword[1] === "qwerty") {
+            next()
+        } else {
+            res.status(401).json({
+                message: "You are not authorized",
+                field: "login&password"
+            });
+            return
+        }
+
     }
 
-    res.status(401).json({
-        message: "You are not authorized",
-        field: "login&password"
-    });
+
     return
 }
