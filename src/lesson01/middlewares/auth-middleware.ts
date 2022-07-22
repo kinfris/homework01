@@ -7,6 +7,10 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         res.sendStatus(401)
     }
 
+    if (!req.headers) {
+        res.sendStatus(401)
+    }
+
      if(authInfo && authInfo.split(" ")[0] !== "Basic"){
         res.sendStatus(401)
     }
