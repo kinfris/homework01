@@ -2,6 +2,7 @@ import {Router, Request, Response} from "express";
 import {body} from "express-validator";
 import {postsRepositories} from "../repositories/posts-repository";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const postsRouter = Router();
 
@@ -48,7 +49,7 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-postsRouter.post("/", titleValidation, shortDescriptionValidation, contentValidation,
+postsRouter.post("/", authMiddleware, titleValidation, shortDescriptionValidation, contentValidation,
     bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
         const post = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
         if (post) {
@@ -58,21 +59,24 @@ postsRouter.post("/", titleValidation, shortDescriptionValidation, contentValida
         }
     });
 
-postsRouter.put("/:id", titleValidation, shortDescriptionValidation, contentValidation, bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-    const updatedPost = postsRepositories.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
-    const post = postsRepositories.getPostById(req.params.id);
-    if (post) {
-        if (updatedPost) {
-            res.send(204)
+postsRouter.put("/:id", authMiddleware, titleValidation,
+    shortDescriptionValidation, contentValidation,
+    bloggerIdValidation, inputValidationMiddleware,
+    (req: Request, res: Response) => {
+        const updatedPost = postsRepositories.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
+        const post = postsRepositories.getPostById(req.params.id);
+        if (post) {
+            if (updatedPost) {
+                res.send(204)
+            } else {
+                res.status(400).json(bloggerIdErrorMsg)
+            }
         } else {
-            res.status(400).json(bloggerIdErrorMsg)
+            res.send(404)
         }
-    } else {
-        res.send(404)
-    }
-});
+    });
 
-postsRouter.delete("/:id", (req: Request, res: Response) => {
+postsRouter.delete("/:id", authMiddleware, inputValidationMiddleware, (req: Request, res: Response) => {
     const post = postsRepositories.deletePost(req.params.id);
     if (post) {
         res.send(204)

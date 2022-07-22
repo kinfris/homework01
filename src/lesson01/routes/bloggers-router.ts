@@ -2,6 +2,7 @@ import {Router, Request, Response} from "express";
 import {bloggersRepositories} from "../repositories/bloggers-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const bloggersRouter = Router();
 
@@ -29,12 +30,12 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-bloggersRouter.post("/", nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
+bloggersRouter.post("/", authMiddleware, nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const blogger = bloggersRepositories.createBlogger(req.body.name, req.body.youtubeUrl)
     res.status(201).send(blogger)
 });
 
-bloggersRouter.put("/:id", nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
+bloggersRouter.put("/:id", authMiddleware, nameValidation, urlValidation, inputValidationMiddleware, (req: Request, res: Response) => {
     const blogger = bloggersRepositories.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
     if (blogger) {
         res.send(204)
@@ -43,7 +44,7 @@ bloggersRouter.put("/:id", nameValidation, urlValidation, inputValidationMiddlew
     }
 });
 
-bloggersRouter.delete("/:id", (req: Request, res: Response) => {
+bloggersRouter.delete("/:id", authMiddleware, inputValidationMiddleware, (req: Request, res: Response) => {
     const isDeleted = bloggersRepositories.deleteBlogger(req.params.id);
     if (isDeleted) {
         res.send(204);
