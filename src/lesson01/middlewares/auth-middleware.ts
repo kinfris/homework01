@@ -18,11 +18,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
                 message: "You are not authorized",
                 field: "login&password"
             });
-            return
         }
-
     }
-
-
-    return
 }
