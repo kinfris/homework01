@@ -7,6 +7,10 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         res.sendStatus(401)
     }
 
+     if(authInfo && authInfo.split(" ")[0] !== "Basic"){
+        res.sendStatus(401)
+    }
+
     if (authInfo) {
         let loginPasswordBase64 = authInfo.split(" ");
 
@@ -17,9 +21,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         let loginPassword = str.split(":")
         if (loginPassword[0] === "admin" && loginPassword[1] === "qwerty") {
             next();
-        } else if(loginPasswordBase64[0] !== "Basic"){
-            res.sendStatus(401)
-        } else {
+        }  else {
             res.status(401).send({
                 message: "You are not authorized",
                 field: "login&password"
