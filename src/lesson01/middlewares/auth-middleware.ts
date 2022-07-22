@@ -6,11 +6,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     if (authInfo) {
         let loginPasswordBase64 = authInfo.split(" ")[1];
 
-        /*const buff = Buffer.from(loginPasswordBase64, 'base64');
+        const buff = Buffer.from(loginPasswordBase64, 'base64');
 
-        const str = buff.toString('utf-8');*/
+        const str = buff.toString('utf-8');
 
-        let loginPassword = loginPasswordBase64.split(":")
+        let loginPassword = str.split(":")
         if (loginPassword[0] === "admin" && loginPassword[1] === "qwerty") {
             next();
         } else {
