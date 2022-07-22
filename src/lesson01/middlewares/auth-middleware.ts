@@ -13,11 +13,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         let loginPassword = str.split(":")
         if (loginPassword[0] === "admin" && loginPassword[1] === "qwerty") {
             next()
-        } else {
-            res.status(401).json({
-                message: "You are not authorized",
-                field: "login&password"
-            });
         }
+    } else {
+        res.status(401).json({
+            message: "You are not authorized",
+            field: "login&password"
+        });
     }
 }
