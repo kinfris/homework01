@@ -1,8 +1,12 @@
 import {MongoClient} from "mongodb";
+import {ProductType} from "../types/db-shop";
 
 const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017";
 
-export const client = new MongoClient(mongoUri);
+const client = new MongoClient(mongoUri);
+
+const shopDb = client.db("shop");
+export const productsCollection = shopDb.collection<ProductType>("products");
 
 export async function runDb() {
     try {
