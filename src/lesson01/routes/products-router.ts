@@ -12,23 +12,23 @@ const titleValidation = body("title").trim().isLength({
 }).withMessage("title length must be from 3 to 40 symbols");
 
 productsRouter.get("/", async (req: Request, res: Response) => {
-    let videos: ProductType[] = await productsService.findProducts(req.body.title);
-    res.send(videos)
+    let products: ProductType[] = await productsService.findProducts(req.body.title);
+    res.send(products)
 });
 
 productsRouter.post("/", titleValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-    const newVideo: ProductType = await productsService.createProduct(req.body.title)
-    if (newVideo) {
-        res.status(201).send(newVideo)
+    const newproduct: ProductType = await productsService.createProduct(req.body.title)
+    if (newproduct) {
+        res.status(201).send(newproduct)
     } else {
         res.send(404)
     }
 });
 
 productsRouter.get("/:id", async (req: Request, res: Response) => {
-    const video: ProductType | null = await productsService.findProductById(+req.params.id);
-    if (video) {
-        res.send(video);
+    const product: ProductType | null = await productsService.findProductById(+req.params.id);
+    if (product) {
+        res.send(product);
     } else {
         res.send(404)
     }
@@ -36,9 +36,10 @@ productsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 productsRouter.put("/:id", titleValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-    const video: boolean = await productsService.updateProduct(+req.params.id, req.body.title);
-    if (video) {
-        res.send(204);
+    const isUpdated: boolean = await productsService.updateProduct(+req.params.id, req.body.title);
+    if (isUpdated) {
+        const product = await productsService.findProductById(+req.params.id)
+        res.send(product);
     } else {
         res.send(404)
     }
