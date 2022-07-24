@@ -22,11 +22,7 @@ export const productsRepositories = {
         }
     },
 
-    async createProduct(title: string): Promise<ProductType> {
-        const product = {
-            id: +(new Date()),
-            title: title,
-        }
+    async createProduct(product: ProductType): Promise<ProductType> {
         const result = await productsCollection.insertOne(product)
         return product;
     },

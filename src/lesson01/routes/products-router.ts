@@ -1,7 +1,8 @@
 import {Router, Request, Response} from "express";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
-import {productsRepositories, ProductType} from "../repositories/products-db-repository";
+import {ProductType} from "../types/db-shop";
+import {productsService} from "../domain/product-service";
 
 export const productsRouter = Router();
 
@@ -11,12 +12,12 @@ const titleValidation = body("title").trim().isLength({
 }).withMessage("title length must be from 3 to 40 symbols");
 
 productsRouter.get("/", async (req: Request, res: Response) => {
-    let videos: ProductType[] = await productsRepositories.getAllProducts(req.body.title);
+    let videos: ProductType[] = await productsService.findProducts(req.body.title);
     res.send(videos)
 });
 
 productsRouter.post("/", titleValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-    const newVideo: ProductType = await productsRepositories.createProduct(req.body.title)
+    const newVideo: ProductType = await productsService.createProduct(req.body.title)
     if (newVideo) {
         res.status(201).send(newVideo)
     } else {
@@ -25,7 +26,7 @@ productsRouter.post("/", titleValidation, inputValidationMiddleware, async (req:
 });
 
 productsRouter.get("/:id", async (req: Request, res: Response) => {
-    const video: ProductType | null = await productsRepositories.getProductById(+req.params.id);
+    const video: ProductType | null = await productsService.findProductById(+req.params.id);
     if (video) {
         res.send(video);
     } else {
@@ -35,7 +36,7 @@ productsRouter.get("/:id", async (req: Request, res: Response) => {
 })
 
 productsRouter.put("/:id", titleValidation, inputValidationMiddleware, async (req: Request, res: Response) => {
-    const video: boolean = await productsRepositories.updateProductTitle(+req.params.id, req.body.title);
+    const video: boolean = await productsService.updateProduct(+req.params.id, req.body.title);
     if (video) {
         res.send(204);
     } else {
@@ -44,7 +45,7 @@ productsRouter.put("/:id", titleValidation, inputValidationMiddleware, async (re
 })
 
 productsRouter.delete("/:id", async (req: Request, res: Response) => {
-    const isDeleted: boolean = await productsRepositories.deleteProduct(+req.params.id);
+    const isDeleted: boolean = await productsService.deleteProduct(+req.params.id);
     if (isDeleted) {
         res.send(204);
     } else {
