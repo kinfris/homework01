@@ -1,21 +1,21 @@
-type videoType = {
+export type VideoType = {
     id: number
     title: string
     author: string
 }
 
-const videos: videoType[] = []
+const videos: VideoType[] = []
 
 export const videosRepositories = {
-    getAllVideos() {
+    async getAllVideos(): Promise<VideoType[]> {
         return videos
     },
 
-    getVideoById(id: string) {
+    async getVideoById(id: string): Promise<VideoType | undefined> {
         return videos.find(v => v.id === +id);
     },
 
-    createVideo(title: string) {
+    async createVideo(title: string): Promise<VideoType> {
         const video = {
             id: +(new Date()),
             title: title,
@@ -25,16 +25,16 @@ export const videosRepositories = {
         return video;
     },
 
-    updateVideoTitle(id: string, title: string) {
+    async updateVideoTitle(id: string, title: string): Promise<VideoType | undefined> {
         let video = videos.find(v => v.id === +id)
         if (video) {
             video.title = title;
             return video
         }
     },
-    deleteVideo(id: string) {
+    async deleteVideo(id: string): Promise<boolean> {
         for (let i = 0; i < videos.length; i++) {
-            if(videos[i].id === +id){
+            if (videos[i].id === +id) {
                 videos.splice(i, 1);
                 return true;
             }

@@ -1,4 +1,4 @@
-type bloggersType = {
+export type bloggersType = {
     id: number
     name: string
     youtubeUrl: string
