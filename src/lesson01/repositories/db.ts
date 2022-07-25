@@ -17,6 +17,6 @@ export async function runDb() {
     } catch {
 
         console.log("Can`t connect to mongo server");
-        await client.close
+        await client.close();
     }
 }
