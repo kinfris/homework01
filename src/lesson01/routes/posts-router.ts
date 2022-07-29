@@ -1,8 +1,11 @@
 import {Router, Request, Response} from "express";
 import {body} from "express-validator";
-import {postsRepositories} from "../repositories/posts-repository";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {postsService} from "../domain/posts-service";
+import {postType} from "../types/post";
+import {bloggersService} from "../domain/bloggers-service";
+import {bloggerType} from "../types/bloger";
 
 export const postsRouter = Router();
 
@@ -25,6 +28,13 @@ const bloggerIdValidation = body("bloggerId").trim().isLength({
     min: 3
 }).withMessage("bloggerId is required");
 
+const isBloggerExist = body("bloggerId").custom(async value => {
+    const blogger: bloggerType | null = await bloggersService.findBloggerById(value);
+    if (!blogger) {
+        return Promise.reject("Blogger with this id doesn`t exist")
+    }
+})
+
 const bloggerIdErrorMsg = {
     errorsMessages: [
         {
@@ -35,13 +45,13 @@ const bloggerIdErrorMsg = {
 }
 
 
-postsRouter.get("/", (req: Request, res: Response) => {
-    const posts = postsRepositories.getAllPosts();
+postsRouter.get("/", async (req: Request, res: Response) => {
+    const posts: postType[] = await postsService.findPosts(req.body.title);
     res.send(posts)
 });
 
-postsRouter.get("/:id", (req: Request, res: Response) => {
-    const post = postsRepositories.getPostById(req.params.id);
+postsRouter.get("/:id", async (req: Request, res: Response) => {
+    const post: postType | null = await postsService.findPostById(req.params.id);
     if (post) {
         res.send(post)
     } else {
@@ -49,35 +59,33 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
     }
 });
 
-postsRouter.post("/", authMiddleware,  titleValidation, shortDescriptionValidation, contentValidation,
-    bloggerIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-        const post = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
+postsRouter.post("/", authMiddleware, titleValidation, shortDescriptionValidation, contentValidation,
+    bloggerIdValidation, isBloggerExist, inputValidationMiddleware, async (req: Request, res: Response) => {
+        const post: postType | null = await postsService.createPost(req.body.bloggerId, req.body.title, req.body.shortDescription, req.body.content);
         if (post) {
             res.status(201).send(post)
         } else {
-            res.status(400).json(bloggerIdErrorMsg)
+            res.sendStatus(404)
+            //res.status(400).json(bloggerIdErrorMsg)
         }
     });
 
 postsRouter.put("/:id", authMiddleware, titleValidation,
     shortDescriptionValidation, contentValidation,
-    bloggerIdValidation, inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const updatedPost = postsRepositories.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
-        const post = postsRepositories.getPostById(req.params.id);
-        if (post) {
-            if (updatedPost) {
-                res.send(204)
-            } else {
-                res.status(400).json(bloggerIdErrorMsg)
-            }
+    bloggerIdValidation, isBloggerExist, inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const updatedPost: boolean = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.bloggerId);
+        if (updatedPost) {
+            res.send(204)
         } else {
             res.send(404)
+            // res.status(400).json(bloggerIdErrorMsg)
         }
+
     });
 
-postsRouter.delete("/:id", authMiddleware, inputValidationMiddleware, (req: Request, res: Response) => {
-    const post = postsRepositories.deletePost(req.params.id);
+postsRouter.delete("/:id", authMiddleware, inputValidationMiddleware, async (req: Request, res: Response) => {
+    const post: boolean = await postsService.deletePost(req.params.id);
     if (post) {
         res.send(204)
     } else {

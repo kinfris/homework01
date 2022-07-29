@@ -9,7 +9,7 @@ export const productsRepositories = {
             filter.title = {$regex: title}
         }
 
-        return productsCollection.find(filter).toArray()
+        return await productsCollection.find(filter).toArray()
     },
 
     async getProductById(id: number): Promise<ProductType | null> {

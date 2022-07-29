@@ -4,6 +4,7 @@ import {bloggersRouter} from "./lesson01/routes/bloggers-router";
 import {postsRouter} from "./lesson01/routes/posts-router";
 import {runDb} from "./lesson01/repositories/db";
 import {productsRouter} from "./lesson01/routes/products-router";
+import 'dotenv/config'
 
 const app = express();
 const port = process.env.PORT || 5000;

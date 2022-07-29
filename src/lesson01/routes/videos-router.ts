@@ -12,6 +12,7 @@ const titleValidation = body("title").trim().isLength({
 
 videosRouter.get("/", async (req: Request, res: Response) => {
     let videos: VideoType[] = await videosRepositories.getAllVideos();
+   debugger;
     res.send(videos)
 });
 
