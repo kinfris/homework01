@@ -9,15 +9,33 @@ export const postsRepositories = {
             filter.title = {$regex: title}
         }
 
-        return await postsCollection.find(filter).toArray();
+        const posts = await postsCollection.find(filter).toArray();
+        const newPosts = posts.map(post => ({
+            id: post.id,
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            bloggerId: post.bloggerId,
+            bloggerName: post.bloggerName,
+        }))
+
+        return newPosts;
     },
 
     async getPostById(id: number): Promise<postType | null> {
-        const blogger = await postsCollection.findOne({id})
-        if (blogger) {
-            return blogger
+        const post = await postsCollection.findOne({id})
+        if (post) {
+            const newPosts = {
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                bloggerId: post.bloggerId,
+                bloggerName: post.bloggerName,
+            };
+            return newPosts;
         } else {
-            return null
+            return null;
         }
 
 

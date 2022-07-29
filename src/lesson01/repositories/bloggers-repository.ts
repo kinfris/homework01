@@ -10,13 +10,24 @@ export const bloggersRepositories = {
             filter.title = {$regex: ""}
         }
 
-        return bloggersCollection.find(filter).toArray();
+        const bloggers = await bloggersCollection.find(filter).toArray();
+        const newBloggers = bloggers.map(blogger => ({
+            id: blogger.id,
+            name: blogger.name,
+            youtubeUrl: blogger.youtubeUrl
+        }));
+        return newBloggers;
     },
 
     async getBloggerById(id: number): Promise<bloggerType | null> {
         const blogger: bloggerType | null = await bloggersCollection.findOne({id: +id})
         if (blogger) {
-            return blogger
+            let newBlogger = {
+                id: blogger.id,
+                name: blogger.name,
+                youtubeUrl: blogger.youtubeUrl
+            }
+            return newBlogger
         } else {
             return null
         }
@@ -27,7 +38,7 @@ export const bloggersRepositories = {
         return blogger;
     },
 
-    async updateBlogger(id: number, name: string, youtubeUrl: string):Promise<boolean> {
+    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id}, {$set: {name, youtubeUrl}})
         return result.matchedCount === 1;
     },
