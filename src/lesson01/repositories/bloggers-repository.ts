@@ -10,24 +10,13 @@ export const bloggersRepositories = {
             filter.title = {$regex: ""}
         }
 
-        const bloggers = await bloggersCollection.find(filter).toArray();
-        const newBloggers = bloggers.map(blogger => ({
-            id: blogger.id,
-            name: blogger.name,
-            youtubeUrl: blogger.youtubeUrl
-        }));
-        return newBloggers;
+        return await bloggersCollection.find(filter,{projection:{_id:0}}).toArray();
     },
 
     async getBloggerById(id: number): Promise<bloggerType | null> {
-        const blogger: bloggerType | null = await bloggersCollection.findOne({id: +id})
+        const blogger: bloggerType | null = await bloggersCollection.findOne({id: +id},{projection:{_id:0}})
         if (blogger) {
-            let newBlogger = {
-                id: blogger.id,
-                name: blogger.name,
-                youtubeUrl: blogger.youtubeUrl
-            }
-            return newBlogger
+            return blogger
         } else {
             return null
         }

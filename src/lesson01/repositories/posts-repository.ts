@@ -9,31 +9,13 @@ export const postsRepositories = {
             filter.title = {$regex: title}
         }
 
-        const posts = await postsCollection.find(filter).toArray();
-        const newPosts = posts.map(post => ({
-            id: post.id,
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            bloggerId: post.bloggerId,
-            bloggerName: post.bloggerName,
-        }))
-
-        return newPosts;
+        return await postsCollection.find(filter,{projection:{_id:0}}).toArray();
     },
 
     async getPostById(id: number): Promise<postType | null> {
-        const post = await postsCollection.findOne({id})
+        const post = await postsCollection.findOne({id},{projection:{_id:0}})
         if (post) {
-            const newPosts = {
-                id: post.id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                bloggerId: post.bloggerId,
-                bloggerName: post.bloggerName,
-            };
-            return newPosts;
+            return post;
         } else {
             return null;
         }
